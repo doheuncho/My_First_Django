@@ -4,6 +4,8 @@ Private website to put together my cooking recipe.
 
 Base on [Django:제로부터 시작하는 인스타그램](https://youtu.be/M8UPyeF5DfM)
 
+![title](main_image.png) |![title](profile_image.png)
+--- | -- |
 
 ## Load Map
 
