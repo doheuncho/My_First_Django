@@ -15,7 +15,7 @@ class Main(APIView):
 
         if user_id is None:
             return render(request, "user/login.html")
-
+        
         user = User.objects.filter(user_id=user_id).first()
 
         if user is None:
@@ -25,20 +25,20 @@ class Main(APIView):
         feed_list = []
 
         for feed in feed_object_list:
-            user = User.objects.filter(user_id=feed.user_id).first()
+            feed_user = User.objects.filter(user_id=feed.user_id).first()
             reply_object_list = Reply.objects.filter(feed_id=feed.id)
             reply_list = []
 
             for reply in reply_object_list:
-                user = User.objects.filter(user_id=reply.user_id).first()
-                reply_list.append(dict(reply_content=reply.reply_content,
-                                       user_id=user.user_id))
+                reply_user = User.objects.filter(user_id=reply.user_id).first()
+                reply_list.append(dict(reply_content=reply.reply_content, user_id=reply_user.user_id))
+            # get bookmark info
             is_marked=Bookmark.objects.filter(feed_id=feed.id, user_id=user_id, is_marked=True).exists()
             feed_list.append(dict(id=feed.id,
                                     image=feed.image,
                                     content=feed.content,
-                                    profile_image=user.thumbnail,
-                                    user_id=user.user_id,
+                                    profile_image=feed_user.thumbnail,
+                                    user_id=feed_user.user_id,
                                     reply_list=reply_list,
                                     is_marked=is_marked
                                     ))
