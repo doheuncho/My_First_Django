@@ -86,6 +86,12 @@
         .feed_txt {
             font-size: 14px;
         }
+
+        .feed_name_txt {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 
@@ -100,7 +106,6 @@
                 <span type="button" class="material-icons" style="padding-right: 5px;">home</span>
                 <span type="button" id="add_box_nav" class="material-icons-outlined"
                     style="padding-right: 5px;">post_add</span>
-
 
                 <div class="dropdown">
                     <a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
@@ -126,18 +131,44 @@
             <!-- feed box -->
             {% for feed in feed_list %}
             <div class="border feed_box">
-                <div style="display: flex; flex-direction: row; align-items: center; margin: 0 10px;">
-                    <div class="box" style="background: #BDBDBD; width: 45px; height: 45px;">
-                        <img class="profile" src="{% get_media_prefix %}{{ feed.profile_image }}">
+                <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; margin: 0 10px;">
+                    <div style="display: flex; flex-direction: row; align-items: center;">
+                        <div class="box" style="background: #BDBDBD; width: 45px; height: 45px;">
+                            <img class="profile" src="{% get_media_prefix %}{{ feed.profile_image }}">
+                        </div>
+                        <span class="feed_name_txt">{{ feed.user_id }}</span>
                     </div>
-                    <span class="feed_name_txt"> {{ feed.user_id }} </span>
+                    {% if feed.user_id == user.user_id %}
+                    <div class="dropdown">
+                        <a href="#" role="button" id="dropdownFeed" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="box" style="width: 25px; height: 25px">
+                                <span class="material-icons-outlined">more_vert</span>
+                            </div>
+                        </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownFeed">
+                            <li>
+                                <div type="button" feed_id="{{ feed.id }}" class="update_feed"
+                                    style="font-weight: bold">수정</div>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <div type="button" feed_id="{{ feed.id }}" class="delete_feed"
+                                    style="font-weight: bold">삭제</div>
+                            </li>
+                        </ul>
+                    </div>
+                    {% endif %}
                 </div>
                 <div>
                     <img style="width: 100%;" src="{% get_media_prefix %}{{ feed.image }}">
                 </div>
                 <div style="display: flex; flex-direction: row; justify-content: space-between; margin: 0 10px;">
                     <div>
-                        <span type="button" id="bookmark_{{ feed.id }}" feed_id="{{ feed.id }}" class="bookmark material-icons-outlined" style="cursor: pointer">
+                        <span type="button" id="bookmark_{{ feed.id }}" feed_id="{{ feed.id }}"
+                            class="bookmark material-icons-outlined" style="cursor: pointer">
                             {% if feed.is_marked %}
                             bookmark
                             {% else %}
@@ -150,7 +181,7 @@
                     </div>
                 </div>
                 <div style="text-align: left; margin: 0 10px;">
-                    <p class="feed_txt"><b> {{ feed.content }}</p>
+                    <p class="feed_txt" style="white-space: pre"><b>{{ feed.content }}</p>
                 </div>
                 <div id="reply_list_{{ feed.id }}">
                     {% for reply in feed.reply_list %}
@@ -314,6 +345,11 @@
             $(document.body).css({
                 overflow: 'visible',
             });
+
+            $('.img_upload_space').css({
+                'background-image': 'none',
+                'outline': '2px dashed black',
+            });
         });
 
         $('#close_text_modal').click(function () {
@@ -323,6 +359,11 @@
 
             $(document.body).css({
                 overflow: 'visible',
+            });
+
+            $('.img_upload_space').css({
+                'background-image': 'none',
+                'outline': '2px dashed black',
             });
         });
 
