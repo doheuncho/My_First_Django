@@ -55,10 +55,3 @@ python manage.py runserver
 ``` 
 http://127.0.0.1:8000/main/
 ```
-
-<p>7. Login with test account</p>
-
-```
-test_id
-test_pw
-```
