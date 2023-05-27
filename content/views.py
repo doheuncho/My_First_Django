@@ -65,6 +65,48 @@ class UploadFeed(APIView):
         return Response(status=200)
 
 
+class UpdateFeed(APIView):
+    def post(self, request):
+        feed_id = request.data.get('feed_id', None)
+        feed = Feed.objects.get(id=feed_id)
+        
+        old_image_path = os.path.join(MEDIA_ROOT, feed.image)
+
+        if "file" in request.FILES:
+            file = request.FILES["file"]
+            if os.path.exists(old_image_path):
+                os.remove(old_image_path)
+
+            new_image = uuid4().hex
+            save_path = os.path.join(MEDIA_ROOT, new_image)
+            feed.image = new_image
+            
+            with open(save_path, "wb+") as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+                    
+        
+        content = request.data.get("content")
+        feed.content = content
+        feed.save()
+        
+        return Response(status=200)
+    
+
+class DeleteFeed(APIView):
+    def post(self, request):
+        feed_id = request.data.get('feed_id', None)
+        feed = Feed.objects.get(id=feed_id)
+
+        if feed:
+            feed_image_path = os.path.join(MEDIA_ROOT, feed.image)
+            if os.path.exists(feed_image_path):
+                os.remove(feed_image_path)
+            feed.delete()
+        
+        return Response(status=200)
+    
+
 class Profile(APIView):
     def get(self, request):
         user_id = request.session.get('user_id', None)
